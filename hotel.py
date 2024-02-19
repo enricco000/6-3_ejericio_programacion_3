@@ -72,7 +72,12 @@ class Hotel:
         hotels = Hotel.get_all_hotels()
         if hotel_id in hotels:
             hotel = hotels[hotel_id]
-            print(f"Hotel ID: {hotel_id}, Name: {hotel['name']}, Location: {hotel['location']}, Rooms: {hotel['rooms']}")
+            print(
+                f"Hotel ID: {hotel_id}, "\
+                    f"Name: {hotel['name']}, "\
+                    f"Location: {hotel['location']}, "\
+                    f"Rooms: {hotel['rooms']}"
+                )
         else:
             print("Hotel not found.")
 
@@ -99,7 +104,9 @@ def main():
     create_parser.add_argument('hotel_id', type=str, help='Hotel ID')
     create_parser.add_argument('name', type=str, help='Name of the hotel')
     create_parser.add_argument('location', type=str, help='Location of the hotel')
-    create_parser.add_argument('--rooms', type=json.loads, default='{}', help='JSON string of rooms')
+    create_parser.add_argument(
+        '--rooms', type=json.loads, default='{}', help='JSON string of rooms'
+        )
 
     # Delete hotel command
     delete_parser = subparsers.add_parser('delete', help='Delete a hotel')

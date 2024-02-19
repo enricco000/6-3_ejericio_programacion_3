@@ -6,11 +6,19 @@ import os
 import argparse
 from hotel import Hotel
 
+
 class Reservation:
     """Reservation class for the system"""
     reservations_file = 'reservations.json'
 
-    def __init__(self, reservation_id, customer_id, hotel_id, room_number, start_date, end_date):
+    def __init__(
+            self,
+            reservation_id,
+            customer_id,
+            hotel_id,
+            room_number,
+            start_date,
+            end_date):
         self.reservation_id = reservation_id
         self.customer_id = customer_id
         self.hotel_id = hotel_id
@@ -19,12 +27,16 @@ class Reservation:
         self.end_date = end_date
 
     def save(self):
-        """Save the reservation to the JSON file and update hotel room status."""
+        """Save the reservation to the JSON file and
+        update hotel room status."""
         if not os.path.isfile(Reservation.reservations_file):
-            with open(Reservation.reservations_file, 'w', encoding='utf-8') as file:
+            with open(
+                    Reservation.reservations_file, 'w',
+                    encoding='utf-8') as file:
                 json.dump({}, file)
 
-        with open(Reservation.reservations_file, 'r+', encoding='utf-8') as file:
+        with open(Reservation.reservations_file,
+            'r+', encoding='utf-8') as file:
             reservations = json.load(file)
             reservations[self.reservation_id] = {
                 "customer_id": self.customer_id,
@@ -59,7 +71,6 @@ class Reservation:
                 file.seek(0)
                 file.truncate()
                 json.dump(reservations, file, indent=4)
-
                 with open(Hotel.hotels_file, 'r+', encoding='utf-8') as file:
                     hotels = json.load(file)
                     hotel_id = reservation['hotel_id']
@@ -71,9 +82,8 @@ class Reservation:
                         file.truncate()
                         json.dump(hotels, file, indent=4)
                 return True
-            else:
-                print("Reservation not found.")
-                return False
+            print("Reservation not found.")
+            return False
 
     @staticmethod
     def get_all_reservations():
