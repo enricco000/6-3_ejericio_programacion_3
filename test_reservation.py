@@ -8,6 +8,7 @@ from hotel import Hotel
 from customer import Customer
 
 class TestReservation(unittest.TestCase):
+    """Test reservations"""
     @classmethod
     def setUpClass(cls):
         if os.path.exists(Reservation.reservations_file):
@@ -53,4 +54,4 @@ class TestReservation(unittest.TestCase):
             os.remove(Customer.customers_file)
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

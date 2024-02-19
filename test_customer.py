@@ -6,6 +6,7 @@ import os
 from customer import Customer
 
 class TestCustomer(unittest.TestCase):
+    """Test customer"""
     @classmethod
     def setUpClass(cls):
         if os.path.exists(Customer.customers_file):
@@ -40,4 +41,4 @@ class TestCustomer(unittest.TestCase):
             os.remove(Customer.customers_file)
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

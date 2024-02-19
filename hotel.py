@@ -18,18 +18,19 @@ class Hotel:
 
     def save(self):
         """Save the hotel to the JSON file."""
-        if not os.path.isfile(Hotel.hotels_file):
-            with open(Hotel.hotels_file, 'w', encoding='utf-8') as file:
-                json.dump({}, file)
-
-        with open(Hotel.hotels_file, 'r+', encoding='utf-8') as file:
-            hotels = json.load(file)
-            hotels[self.hotel_id] = {
-                "name": self.name,
-                "location": self.location,
-                "rooms": self.rooms
-            }
-            file.seek(0)
+        hotels = {}
+        if os.path.isfile(Hotel.hotels_file):
+            with open(Hotel.hotels_file, 'r', encoding='utf-8') as file:
+                try:
+                    hotels = json.load(file)
+                except json.JSONDecodeError:
+                    print("Warning: Existing hotels file is corrupted and will be overwritten.")
+        hotels[self.hotel_id] = {
+            "name": self.name,
+            "location": self.location,
+            "rooms": self.rooms
+        }
+        with open(Hotel.hotels_file, 'w', encoding='utf-8') as file:
             json.dump(hotels, file, indent=4)
 
     @staticmethod
@@ -38,9 +39,12 @@ class Hotel:
         if not os.path.isfile(Hotel.hotels_file):
             print("Hotels file not found.")
             return
-
         with open(Hotel.hotels_file, 'r+', encoding='utf-8') as file:
-            hotels = json.load(file)
+            try:
+                hotels = json.load(file)
+            except json.JSONDecodeError:
+                print("Error: hotels file is corrupted.")
+                return
             if hotel_id in hotels:
                 del hotels[hotel_id]
                 file.seek(0)
@@ -55,7 +59,11 @@ class Hotel:
         if not os.path.isfile(Hotel.hotels_file):
             return {}
         with open(Hotel.hotels_file, 'r', encoding='utf-8') as file:
-            hotels = json.load(file)
+            try:
+                hotels = json.load(file)
+            except json.JSONDecodeError:
+                print("Error: hotels file is corrupted.")
+                return {}
         return hotels
 
     @staticmethod
@@ -64,12 +72,7 @@ class Hotel:
         hotels = Hotel.get_all_hotels()
         if hotel_id in hotels:
             hotel = hotels[hotel_id]
-            print(
-                f"""Hotel ID: {hotel_id},
-                Name: {hotel['name']},
-                Location: {hotel['location']},
-                Rooms: {hotel['rooms']}"""
-                )
+            print(f"Hotel ID: {hotel_id}, Name: {hotel['name']}, Location: {hotel['location']}, Rooms: {hotel['rooms']}")
         else:
             print("Hotel not found.")
 
@@ -87,7 +90,7 @@ class Hotel:
             print(f"Room {room_number} not found in hotel {self.hotel_id}.")
 
 def main():
-    """Main when called from terminal"""
+    """Main function when called from terminal"""
     parser = argparse.ArgumentParser(description="Hotel Management CLI")
     subparsers = parser.add_subparsers(dest='command')
 
@@ -96,9 +99,7 @@ def main():
     create_parser.add_argument('hotel_id', type=str, help='Hotel ID')
     create_parser.add_argument('name', type=str, help='Name of the hotel')
     create_parser.add_argument('location', type=str, help='Location of the hotel')
-    create_parser.add_argument(
-        '--rooms', type=json.loads, default='{}', help='JSON string of rooms'
-        )
+    create_parser.add_argument('--rooms', type=json.loads, default='{}', help='JSON string of rooms')
 
     # Delete hotel command
     delete_parser = subparsers.add_parser('delete', help='Delete a hotel')
