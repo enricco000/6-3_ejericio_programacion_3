@@ -61,7 +61,11 @@ class Customer:
         customers = Customer.get_all_customers()
         if customer_id in customers:
             customer = customers[customer_id]
-            print(f"Customer ID: {customer_id}, Name: {customer['name']}, Email: {customer['email']}")
+            print(
+                f"""Customer ID: {customer_id},
+                Name: {customer['name']},
+                Email: {customer['email']}"""
+                )
         else:
             print("Customer not found.")
 
