@@ -5,6 +5,7 @@ import json
 import os
 import argparse
 
+
 class Customer:
     """Customer class for the system"""
     customers_file = 'customers.json'
@@ -76,7 +77,9 @@ def main():
     subparsers = parser.add_subparsers(dest='command')
 
     # Create customer command
-    create_parser = subparsers.add_parser('create', help='Create a new customer')
+    create_parser = subparsers.add_parser(
+        'create', help='Create a new customer'
+        )
     create_parser.add_argument('customer_id', type=str, help='Customer ID')
     create_parser.add_argument('name', type=str, help='Name of the customer')
     create_parser.add_argument('email', type=str, help='Email of the customer')
@@ -86,7 +89,9 @@ def main():
     delete_parser.add_argument('customer_id', type=str, help='Customer ID')
 
     # Display customer info command
-    display_parser = subparsers.add_parser('display', help='Display customer information')
+    display_parser = subparsers.add_parser(
+        'display', help='Display customer information'
+        )
     display_parser.add_argument('customer_id', type=str, help='Customer ID')
 
     args = parser.parse_args()
@@ -102,6 +107,7 @@ def main():
 
     elif args.command == 'display':
         Customer.display_info(args.customer_id)
+
 
 if __name__ == '__main__':
     main()

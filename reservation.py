@@ -35,8 +35,10 @@ class Reservation:
                     encoding='utf-8') as file:
                 json.dump({}, file)
 
-        with open(Reservation.reservations_file,
-            'r+', encoding='utf-8') as file:
+        with open(
+                Reservation.reservations_file,
+                'r+', encoding='utf-8'
+                ) as file:
             reservations = json.load(file)
             reservations[self.reservation_id] = {
                 "customer_id": self.customer_id,
@@ -50,9 +52,12 @@ class Reservation:
 
         with open(Hotel.hotels_file, 'r+', encoding='utf-8') as file:
             hotels = json.load(file)
-            if self.hotel_id in hotels and self.room_number in hotels[self.hotel_id]['rooms']:
-                hotels[self.hotel_id]['rooms'][self.room_number]['available'] = False
-                hotels[self.hotel_id]['rooms'][self.room_number]['customer_id'] = self.customer_id
+            if (self.hotel_id in hotels
+                    and self.room_number in hotels[self.hotel_id]['rooms']):
+                hotels[self.hotel_id]['rooms'][self.room_number]['available']\
+                    = False
+                hotels[self.hotel_id]['rooms'][self.room_number]['customer_id']\
+                    = self.customer_id
                 file.seek(0)
                 file.truncate()
                 json.dump(hotels, file, indent=4)
@@ -64,7 +69,10 @@ class Reservation:
             print("Reservations file not found.")
             return False
 
-        with open(Reservation.reservations_file, 'r+', encoding='utf-8') as file:
+        with open(
+                Reservation.reservations_file,
+                'r+', encoding='utf-8'
+                ) as file:
             reservations = json.load(file)
             if reservation_id in reservations:
                 reservation = reservations.pop(reservation_id)
@@ -75,9 +83,14 @@ class Reservation:
                     hotels = json.load(file)
                     hotel_id = reservation['hotel_id']
                     room_number = reservation['room_number']
-                    if hotel_id in hotels and room_number in hotels[hotel_id]['rooms']:
-                        hotels[hotel_id]['rooms'][room_number]['available'] = True
-                        hotels[hotel_id]['rooms'][room_number]['customer_id'] = None
+                    if (
+                            hotel_id in hotels
+                            and room_number in hotels[hotel_id]['rooms']
+                            ):
+                        hotels[hotel_id]['rooms'][room_number]['available']\
+                            = True
+                        hotels[hotel_id]['rooms'][room_number]['customer_id']\
+                            = None
                         file.seek(0)
                         file.truncate()
                         json.dump(hotels, file, indent=4)
@@ -90,9 +103,12 @@ class Reservation:
         """Return all reservations from the JSON file."""
         if not os.path.isfile(Reservation.reservations_file):
             return {}
-        with open(Reservation.reservations_file, 'r', encoding='utf-8') as file:
+        with open(
+                Reservation.reservations_file, 'r', encoding='utf-8'
+                ) as file:
             reservations = json.load(file)
         return reservations
+
 
 def main():
     """Main function when called from terminal"""
@@ -100,17 +116,29 @@ def main():
     subparsers = parser.add_subparsers(dest='command')
 
     # Create reservation command
-    create_parser = subparsers.add_parser('create', help='Create a new reservation')
-    create_parser.add_argument('reservation_id', type=str, help='Reservation ID')
+    create_parser = subparsers.add_parser(
+        'create', help='Create a new reservation'
+        )
+    create_parser.add_argument(
+        'reservation_id', type=str, help='Reservation ID'
+        )
     create_parser.add_argument('customer_id', type=str, help='Customer ID')
     create_parser.add_argument('hotel_id', type=str, help='Hotel ID')
     create_parser.add_argument('room_number', type=str, help='Room Number')
-    create_parser.add_argument('start_date', type=str, help='Start Date (YYYY-MM-DD)')
-    create_parser.add_argument('end_date', type=str, help='End Date (YYYY-MM-DD)')
+    create_parser.add_argument(
+        'start_date', type=str, help='Start Date (YYYY-MM-DD)'
+        )
+    create_parser.add_argument(
+        'end_date', type=str, help='End Date (YYYY-MM-DD)'
+        )
 
     # Cancel reservation command
-    cancel_parser = subparsers.add_parser('cancel', help='Cancel a reservation')
-    cancel_parser.add_argument('reservation_id', type=str, help='Reservation ID')
+    cancel_parser = subparsers.add_parser(
+        'cancel', help='Cancel a reservation'
+        )
+    cancel_parser.add_argument(
+        'reservation_id', type=str, help='Reservation ID'
+        )
 
     args = parser.parse_args()
 
@@ -132,6 +160,7 @@ def main():
             print(f"Reservation {args.reservation_id} canceled successfully.")
         else:
             print("Failed to cancel reservation.")
+
 
 if __name__ == '__main__':
     main()

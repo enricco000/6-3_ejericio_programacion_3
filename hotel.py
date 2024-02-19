@@ -5,6 +5,7 @@ import json
 import os
 import argparse
 
+
 class Hotel:
     """Hotel class for the system"""
     hotels_file = 'hotels.json'
@@ -13,7 +14,6 @@ class Hotel:
         self.hotel_id = hotel_id
         self.name = name
         self.location = location
-        # Assume rooms is a dict: {room_number: {"available": True, "customer_id": None}}
         self.rooms = rooms
 
     def save(self):
@@ -24,7 +24,10 @@ class Hotel:
                 try:
                     hotels = json.load(file)
                 except json.JSONDecodeError:
-                    print("Warning: Existing hotels file is corrupted and will be overwritten.")
+                    print(
+                        "Warning: Existing hotels file is corrupted "
+                        "and will be overwritten."
+                        )
         hotels[self.hotel_id] = {
             "name": self.name,
             "location": self.location,
@@ -73,17 +76,19 @@ class Hotel:
         if hotel_id in hotels:
             hotel = hotels[hotel_id]
             print(
-                f"Hotel ID: {hotel_id}, "\
-                    f"Name: {hotel['name']}, "\
-                    f"Location: {hotel['location']}, "\
-                    f"Rooms: {hotel['rooms']}"
+                f"Hotel ID: {hotel_id}, "
+                f"Name: {hotel['name']}, "
+                f"Location: {hotel['location']}, "
+                f"Rooms: {hotel['rooms']}"
                 )
         else:
             print("Hotel not found.")
 
     def add_room(self, room_number, available=True, customer_id=None):
         """Add a new room to the hotel."""
-        self.rooms[room_number] = {"available": available, "customer_id": customer_id}
+        self.rooms[room_number] = {
+            "available": available, "customer_id": customer_id
+            }
         self.save()
 
     def remove_room(self, room_number):
@@ -94,6 +99,7 @@ class Hotel:
         else:
             print(f"Room {room_number} not found in hotel {self.hotel_id}.")
 
+
 def main():
     """Main function when called from terminal"""
     parser = argparse.ArgumentParser(description="Hotel Management CLI")
@@ -103,7 +109,11 @@ def main():
     create_parser = subparsers.add_parser('create', help='Create a new hotel')
     create_parser.add_argument('hotel_id', type=str, help='Hotel ID')
     create_parser.add_argument('name', type=str, help='Name of the hotel')
-    create_parser.add_argument('location', type=str, help='Location of the hotel')
+    create_parser.add_argument(
+        'location',
+        type=str,
+        help='Location of the hotel'
+        )
     create_parser.add_argument(
         '--rooms', type=json.loads, default='{}', help='JSON string of rooms'
         )
@@ -113,7 +123,10 @@ def main():
     delete_parser.add_argument('hotel_id', type=str, help='Hotel ID')
 
     # Display hotel info command
-    display_parser = subparsers.add_parser('display', help='Display hotel information')
+    display_parser = subparsers.add_parser(
+        'display',
+        help='Display hotel information'
+        )
     display_parser.add_argument('hotel_id', type=str, help='Hotel ID')
 
     args = parser.parse_args()
@@ -129,6 +142,7 @@ def main():
 
     elif args.command == 'display':
         Hotel.display_info(args.hotel_id)
+
 
 if __name__ == '__main__':
     main()
