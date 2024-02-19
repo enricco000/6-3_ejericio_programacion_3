@@ -85,14 +85,43 @@ class Reservation:
         return reservations
 
 def main():
+    """Main function when called from terminal"""
     parser = argparse.ArgumentParser(description="Reservation Management CLI")
     subparsers = parser.add_subparsers(dest='command')
 
-    # Add more CLI commands as needed
+    # Create reservation command
+    create_parser = subparsers.add_parser('create', help='Create a new reservation')
+    create_parser.add_argument('reservation_id', type=str, help='Reservation ID')
+    create_parser.add_argument('customer_id', type=str, help='Customer ID')
+    create_parser.add_argument('hotel_id', type=str, help='Hotel ID')
+    create_parser.add_argument('room_number', type=str, help='Room Number')
+    create_parser.add_argument('start_date', type=str, help='Start Date (YYYY-MM-DD)')
+    create_parser.add_argument('end_date', type=str, help='End Date (YYYY-MM-DD)')
+
+    # Cancel reservation command
+    cancel_parser = subparsers.add_parser('cancel', help='Cancel a reservation')
+    cancel_parser.add_argument('reservation_id', type=str, help='Reservation ID')
 
     args = parser.parse_args()
 
-    # Handle commands as before
+    if args.command == 'create':
+        reservation = Reservation(
+            args.reservation_id,
+            args.customer_id,
+            args.hotel_id,
+            args.room_number,
+            args.start_date,
+            args.end_date
+            )
+        reservation.save()
+        print(f"Reservation {args.reservation_id} created successfully.")
+
+    elif args.command == 'cancel':
+        success = Reservation.cancel(args.reservation_id)
+        if success:
+            print(f"Reservation {args.reservation_id} canceled successfully.")
+        else:
+            print("Failed to cancel reservation.")
 
 if __name__ == '__main__':
     main()
