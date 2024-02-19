@@ -6,6 +6,7 @@ import os
 import argparse
 
 class Hotel:
+    """Hotel class for the system"""
     hotels_file = 'hotels.json'
 
     def __init__(self, hotel_id, name, location, rooms):
@@ -63,10 +64,27 @@ class Hotel:
         hotels = Hotel.get_all_hotels()
         if hotel_id in hotels:
             hotel = hotels[hotel_id]
-            print(f"Hotel ID: {hotel_id}, Name: {hotel['name']}, Location: {hotel['location']}, Rooms: {hotel['rooms']}")
+            print(
+                f"""Hotel ID: {hotel_id},
+                Name: {hotel['name']},
+                Location: {hotel['location']},
+                Rooms: {hotel['rooms']}"""
+                )
         else:
             print("Hotel not found.")
 
+    def add_room(self, room_number, available=True, customer_id=None):
+        """Add a new room to the hotel."""
+        self.rooms[room_number] = {"available": available, "customer_id": customer_id}
+        self.save()
+
+    def remove_room(self, room_number):
+        """Remove a room from the hotel."""
+        if room_number in self.rooms:
+            del self.rooms[room_number]
+            self.save()
+        else:
+            print(f"Room {room_number} not found in hotel {self.hotel_id}.")
 
 def main():
     """Main when called from terminal"""
@@ -78,7 +96,9 @@ def main():
     create_parser.add_argument('hotel_id', type=str, help='Hotel ID')
     create_parser.add_argument('name', type=str, help='Name of the hotel')
     create_parser.add_argument('location', type=str, help='Location of the hotel')
-    create_parser.add_argument('--rooms', type=json.loads, default='{}', help='JSON string of rooms')
+    create_parser.add_argument(
+        '--rooms', type=json.loads, default='{}', help='JSON string of rooms'
+        )
 
     # Delete hotel command
     delete_parser = subparsers.add_parser('delete', help='Delete a hotel')

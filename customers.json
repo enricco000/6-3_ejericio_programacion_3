@@ -1,0 +1,10 @@
+{
+    "C001": {
+        "name": "John Doe",
+        "email": "johndoe@example.com"
+    },
+    "C002": {
+        "name": "Jane Smith",
+        "email": "janesmith@example.com"
+    }
+}
